@@ -1,7 +1,6 @@
 # Remarks:
 
 One should consider the possibility of a non-existent file.
-
 A switch statement might be better than multiple "if"s.
 
 # Good things:
