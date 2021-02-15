@@ -13,14 +13,24 @@ class FileParser
      */
     public function parseFile(string $filename, string $extension): array
     {
-        if ($extension === 'json') {
-            return json_decode(file_get_contents($filename), true);
-        } elseif($extension === 'xml') {
-            $xml = simplexml_load_string(file_get_contents($filename));
-            $xmlAsJson = json_encode($xml);
-            return json_decode($xmlAsJson, true);
-        } else {
-            return [];
+        //Default result to return in the case of no parsing, or nonexistence of the file.
+        $default_result = [];
+        //Check that the file-to-parse exists.
+        if(file_exists($filename))
+        {
+            //Get the file contents.
+            $content = file_get_contents($filename);
+            switch ($extension)
+            {
+                case "json":
+                    return json_decode($content, true);
+                case "xml":
+                    $encoded_xml = json_encode(simplexml_load_string($content));
+                    return json_decode($encoded_xml, true);
+                default:
+                    return $default_result;
+            }
         }
+        return $default_result;
     }
 }
