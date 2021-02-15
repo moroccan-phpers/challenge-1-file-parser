@@ -18,14 +18,12 @@ class FileParser
         //Check that the file-to-parse exists.
         if(file_exists($filename))
         {
-            //Get the file contents.
-            $content = file_get_contents($filename);
             switch ($extension)
             {
                 case "json":
-                    return json_decode($content, true);
+                    return json_decode(file_get_contents($filename), true);
                 case "xml":
-                    $encoded_xml = json_encode(simplexml_load_string($content));
+                    $encoded_xml = json_encode(simplexml_load_string(file_get_contents($filename)));
                     return json_decode($encoded_xml, true);
                 default:
                     return $default_result;
