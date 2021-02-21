@@ -2,7 +2,7 @@
 
 namespace Tests\Functional\Services;
 
-use App\Services\FileParser;
+use App\DependencyInjection\Container;
 use PHPUnit\Framework\TestCase;
 
 class FileParserTest extends TestCase
@@ -29,9 +29,9 @@ class FileParserTest extends TestCase
     {
         $jsonFile = $this->fixturesPath . 'file.json';
 
-        $fileParser = new FileParser();
+        $fileParser = Container::getContainer()->get('app.services.file_parser');
 
-        $parsedFile = $fileParser->parseFile($jsonFile, 'json');
+        $parsedFile = $fileParser->parseFile($jsonFile);
 
         $expectedContent = [
             'name' => 'moroccan-phpers/challenge-1',
@@ -72,9 +72,9 @@ class FileParserTest extends TestCase
     {
         $xmlFile = $this->fixturesPath . 'file.xml';
 
-        $fileParser = new FileParser();
+        $fileParser = Container::getContainer()->get('app.services.file_parser');
 
-        $parsedFile = $fileParser->parseFile($xmlFile, 'xml');
+        $parsedFile = $fileParser->parseFile($xmlFile);
 
         $expectedContent = [
             '@attributes' => [

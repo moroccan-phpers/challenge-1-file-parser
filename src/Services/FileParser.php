@@ -2,25 +2,43 @@
 
 namespace App\Services;
 
+use App\Parsers\ParserFactory;
+
 class FileParser
 {
+    /**
+     * @var ParserFactory
+     */
+    protected $parserFactory;
+
+    /**
+     * FileParser constructor.
+     * @param ParserFactory $parserFactory
+     */
+    public function __construct(ParserFactory $parserFactory)
+    {
+        $this->parserFactory = $parserFactory;
+    }
+
     /**
      * Takes a file name and returns its content as an array.
      *
      * @param string $filename
-     * @param string $extension
+     *
      * @return array
      */
-    public function parseFile(string $filename, string $extension): array
+    public function parseFile(string $filename): array
     {
-        if ($extension === 'json') {
-            return json_decode(file_get_contents($filename), true);
-        } elseif($extension === 'xml') {
-            $xml = simplexml_load_string(file_get_contents($filename));
-            $xmlAsJson = json_encode($xml);
-            return json_decode($xmlAsJson, true);
-        } else {
-            return [];
+        if (! file_exists($filename)) {
+            throw new \Exception(sprintf('could not parse the file %s as it does not exist', $filename));
         }
+
+        $extension = pathinfo($filename)['extension'];
+
+        $parser = $this->parserFactory->getParser($extension);
+
+        $fileContent = file_get_contents($filename);
+
+        return $parser->parse($fileContent);
     }
 }

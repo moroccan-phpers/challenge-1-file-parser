@@ -1,0 +1,21 @@
+services:
+  app.parser.json:
+    class: App\Parsers\JsonParser
+
+  app.parser.xml:
+    class: App\Parsers\XmlParser
+    arguments:
+      - '@app.parser.json'
+
+  app.factory.parser:
+    class: App\Parsers\ParserFactory
+    arguments:
+      -
+        json: '@app.parser.json'
+        xml: '@app.parser.xml'
+
+  app.services.file_parser:
+    class: App\Services\FileParser
+    arguments:
+      - '@app.factory.parser'
+
